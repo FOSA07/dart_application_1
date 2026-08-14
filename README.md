@@ -43,6 +43,8 @@ mistake.
 | Path | What it is |
 | --- | --- |
 | `bin/dart_application_1.dart` | **The course.** All lessons live here, in teaching order. |
+| `TASKS.md` | **Your exercises.** Practice tasks for every topic, in lesson order. |
+| `BACKLOG.md` | Teacher's planning notes. You can ignore this one. |
 | `pubspec.yaml` | Project name, Dart SDK version, and dependencies. |
 | `analysis_options.yaml` | The rules `dart analyze` checks against. |
 | `lib/`, `test/` | Untouched starter files. We will use these when we reach functions and testing. |
@@ -61,9 +63,10 @@ tracker for the class.
 - [x] Type conversions
 - [x] Libraries
 - [x] User input with `stdin`
-- [x] Collections — List, Set, Map
+- [x] Collections — List, Set, Map, and the spread operator
 - [x] The String class
 - [x] Control structures — decision making, loops, jump statements
+- [x] Building collections with `if` and `for` — collection-if, collection-for
 
 ### Coming next
 
@@ -85,6 +88,13 @@ Each lesson opens with a banner comment in capitals, like:
 
 Search the file for the topic name to jump straight to it. Larger topics are split
 into numbered sub-blocks, for example `1. LIST`, `2. SET`, `3. MAP`.
+
+## Practising
+
+Reading and running the lessons is only half the work. `TASKS.md` has exercises for
+every topic we have covered, in the same order, ending with five longer challenges
+that combine them. Write your answers in an `exercises/` folder — the instructions
+are at the top of that file.
 
 ## Suggested way to study this
 

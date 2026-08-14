@@ -611,6 +611,68 @@ void main() {
   // Note the ?. above: departments["Computing"] might be null, so we ask for .length
   // only if it is not null. This is the null-aware access operator from earlier.
 
+  // -------THE SPREAD OPERATOR (...)-------------------------------------------------
+  // The spread operator is three dots: ...
+  // It takes an existing collection and UNPACKS its items into a new collection
+  // literal. Instead of copying items across one .add() at a time, you pour the
+  // whole collection in at once.
+  // Read [0, ...evenNums, 9] as "a new list holding 0, then everything inside
+  // evenNums, then 9".
+  List<int> evenNums = [2, 4];
+  List<int> oddNums = [1, 3];
+  List<int> allNums = [0, ...evenNums, ...oddNums, 9];
+  print(allNums); // Output: [0, 2, 4, 1, 3, 9]
+  // You can spread as many collections as you like, in any order, mixed with
+  // ordinary items.
+
+  // Why the dots matter
+  // Leaving them out does something completely different - it nests the whole list
+  // inside the new one as a single item:
+  print([
+    0,
+    evenNums,
+  ]); // Output: [0, [2, 4]]   <-- 2 items: a number and a list
+  print([0, ...evenNums]); // Output: [0, 2, 4]  <-- 3 items, all numbers
+  print([0, evenNums].length); // Output: 2
+  print([0, ...evenNums].length); // Output: 3
+
+  // Spreading into a Set
+  // The rules of the destination still apply, so a Set will drop any duplicates
+  // that the spread brings in:
+  Set<String> groupA = {"Ada", "Bola"};
+  Set<String> groupB = {"Bola", "Chidi"};
+  Set<String> everyone = {...groupA, ...groupB};
+  print(everyone); // Output: {Ada, Bola, Chidi}  <-- only one Bola survives
+
+  // Spreading into a Map
+  // Maps spread as whole key-value pairs. This is the normal way to merge settings.
+  Map<String, int> defaults = {"volume": 5, "brightness": 7};
+  Map<String, int> overrides = {"volume": 10};
+  Map<String, int> settings = {...defaults, ...overrides};
+  print(settings); // Output: {volume: 10, brightness: 7}
+  // ORDER MATTERS. When the same key arrives twice, the LAST one wins. Swap the two
+  // spreads around and you get a different answer:
+  print({...overrides, ...defaults}); // Output: {volume: 5, brightness: 7}
+
+  // The null-aware spread ...?
+  // Spreading a collection that is null crashes the program. The ...? form skips a
+  // null collection instead, contributing nothing.
+  List<int>? maybeExtras; // nullable, and currently null
+  // List<int> broken = [0, ...maybeExtras]; // Error: can't spread a possibly-null value
+  List<int> safeList = [0, ...?maybeExtras];
+  print(safeList); // Output: [0]  <-- the null simply added nothing
+  // This matters most with a Map lookup, because looking up a key that does not
+  // exist gives you null, exactly as we saw in the Map section:
+  Map<String, List<int>> bonusMarks = {
+    "Ada": [5, 5],
+  };
+  print([70, ...?bonusMarks["Ada"]]); // Output: [70, 5, 5]
+  print([
+    70,
+    ...?bonusMarks["Bola"],
+  ]); // Output: [70]  <-- no such key, so nothing added
+  // Without the ? on those two lines the second one would not compile at all.
+
   // Copying versus referencing - an important warning
   // Assigning a collection to another variable does NOT make a copy. Both names point
   // at the SAME collection in memory, so a change through one is visible through the other.
@@ -618,12 +680,14 @@ void main() {
   List<String> secondName = originalList; // NOT a copy
   secondName.add("c");
   print(originalList); // Output: [a, b, c]  <-- the "original" changed too
-  // To make a genuine copy, build a new list from the old one:
-  List<String> realCopy = [...originalList]; // the ... is the spread operator
+  // The spread operator is how you make a GENUINE copy. Because [...originalList]
+  // builds a brand new list and pours the old items into it, the two are now
+  // separate collections that happen to hold equal values.
+  List<String> realCopy = [...originalList];
   realCopy.add("d");
   print(originalList); // Output: [a, b, c]  <-- untouched this time
   print(realCopy); // Output: [a, b, c, d]
-  // The spread operator also lets you pour one collection into another:
+  // And spreading two collections together is how you join them:
   List<String> combined = [...colors, ...originalList];
   print(combined); // Output: [Red, Green, Blue, a, b, c]
 
@@ -1094,6 +1158,94 @@ Dart is fast.''';
   // We have only written one function so far - main() - so we will come back to
   // return properly when we study functions. Written on its own inside main(),
   // `return;` would simply end the program at that point.
+
+  // =================================================================================================================================================
+
+  // =======BUILDING COLLECTIONS WITH if AND for========================================================================================================
+  // In the Collections topic we used the spread operator ... to pour one collection
+  // into another. Now that if and for have been covered, we can go one step further.
+  // Dart lets you write an if or a for INSIDE a collection literal, so the collection
+  // is built at the moment it is written, instead of being created empty and filled
+  // afterwards. These are called COLLECTION IF and COLLECTION FOR.
+
+  // Collection if
+  // Include an item only when a condition is true.
+  int userLevel = 2;
+  List<String> menu = [
+    "Home",
+    "Profile",
+    if (userLevel >= 2) "Billing", // included only when the test passes
+    "Logout",
+  ];
+  print(menu); // Output: [Home, Profile, Billing, Logout]
+  // Exactly the same literal with a lower level simply leaves that item out:
+  int guestLevel = 0;
+  print([
+    "Home",
+    "Profile",
+    if (guestLevel >= 2) "Billing",
+    "Logout",
+  ]); // Output: [Home, Profile, Logout]
+  // Notice there is no add() and no if statement outside the list. The condition
+  // lives inside the literal itself.
+  // A collection if can have an else, choosing between two items:
+  print([
+    if (userLevel >= 5) "Admin panel" else "Standard panel",
+  ]); // Output: [Standard panel]
+
+  // Collection for
+  // Produce one item for every item in another collection.
+  List<int> baseNumbers = [1, 2, 3, 4];
+  List<int> doubled = [for (int n in baseNumbers) n * 2];
+  print(doubled); // Output: [2, 4, 6, 8]
+  // Compare that with the long way, which does exactly the same job:
+  List<int> doubledLongWay = [];
+  for (int n in baseNumbers) {
+    doubledLongWay.add(n * 2);
+  }
+  print(doubledLongWay); // Output: [2, 4, 6, 8]
+  // A counting for loop works inside a literal too:
+  print([
+    for (int i = 1; i <= 3; i++) "Item $i",
+  ]); // Output: [Item 1, Item 2, Item 3]
+
+  // Combining for and if
+  // Read this as "for every number, and only if it is even, produce double it".
+  List<int> evensDoubled = [
+    for (int n in baseNumbers)
+      if (n % 2 == 0) n * 2,
+  ];
+  print(evensDoubled); // Output: [4, 8]
+
+  // They work in Sets and Maps as well
+  // In a Set the usual uniqueness rule still applies:
+  Set<String> initials = {
+    for (String personName in ["Ada", "Bola", "Ade"]) personName[0],
+  };
+  print(
+    initials,
+  ); // Output: {A, B}  <-- Ada and Ade both give A, so only one is kept
+  // In a Map you write key: value as the produced item:
+  Map<String, int> wordLengths = {
+    for (String word in ["Dart", "Go", "Python"]) word: word.length,
+  };
+  print(wordLengths); // Output: {Dart: 4, Go: 2, Python: 6}
+
+  // All three together
+  // Spread, collection for and collection if can appear in the same literal.
+  List<String> fullMenu = [
+    "Start",
+    ...menu,
+    for (int i = 1; i <= 2; i++) "Extra $i",
+    if (userLevel >= 5) "Admin",
+  ];
+  print(fullMenu);
+  // Output: [Start, Home, Profile, Billing, Logout, Extra 1, Extra 2]
+
+  // A note on what comes next
+  // Collection for is really a preview of something bigger. When we reach functions
+  // you will meet map() and where(), which do the same transforming and filtering
+  // work as a method call rather than as part of a literal.
 
   // =================================================================================================================================================
 }
