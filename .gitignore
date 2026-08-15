@@ -1,3 +1,7 @@
 # https://dart.dev/tools/private-files
 # Created by `dart pub`
 .dart_tool/
+
+# Students' practice work from TASKS.md (Sets 1-11) stays on their own machine.
+# Only the challenge tasks, which go in bin/, are submitted to the repository.
+exercises/

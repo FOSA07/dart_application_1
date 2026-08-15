@@ -44,10 +44,12 @@ mistake.
 | --- | --- |
 | `bin/dart_application_1.dart` | **The course.** All lessons live here, in teaching order. |
 | `TASKS.md` | **Your exercises.** Practice tasks for every topic, in lesson order. |
+| `GITHUB_GUIDE.md` | **Read before submitting.** How to branch, commit and open a pull request. |
 | `BACKLOG.md` | Teacher's planning notes. You can ignore this one. |
 | `pubspec.yaml` | Project name, Dart SDK version, and dependencies. |
 | `analysis_options.yaml` | The rules `dart analyze` checks against. |
-| `lib/`, `test/` | Untouched starter files. We will use these when we reach functions and testing. |
+| `lib/functions.dart` | Our own library of example functions, imported by the lesson. |
+| `test/` | Starter test file. We will use this properly when we cover testing. |
 
 ## Topics covered so far
 
@@ -67,12 +69,12 @@ tracker for the class.
 - [x] The String class
 - [x] Control structures — decision making, loops, jump statements
 - [x] Building collections with `if` and `for` — collection-if, collection-for
+- [x] Functions — declaration, parameters, defaults, arrow syntax, anonymous and
+      higher-order functions, typedefs, recursion, scope, and the collection
+      methods (`forEach`, `map`, `where`, `reduce`, `fold` …)
 
 ### Coming next
 
-- [ ] Functions — including the collection methods (`forEach`, `map`, `where`,
-      `reduce`, `fold`) that were deliberately held back, because they each take a
-      function as an argument
 - [ ] Null safety as a topic of its own
 - [ ] Object-oriented programming — classes, constructors, inheritance
 - [ ] Exception handling
@@ -92,9 +94,20 @@ into numbered sub-blocks, for example `1. LIST`, `2. SET`, `3. MAP`.
 ## Practising
 
 Reading and running the lessons is only half the work. `TASKS.md` has exercises for
-every topic we have covered, in the same order, ending with five longer challenges
-that combine them. Write your answers in an `exercises/` folder — the instructions
-are at the top of that file.
+every topic we have covered, in the same order, ending with the longer challenges
+that combine them.
+
+There are two kinds of work, and they are handled differently:
+
+- **Practice sets (1–11)** — write these in an `exercises/` folder on your own
+  machine. That folder is ignored by Git, so it stays private to you.
+- **Challenges (C1, C2, C3 …)** — these are submitted. Each one goes in `bin/`, in
+  a file named after you, on a branch of your own. **`GITHUB_GUIDE.md` walks you
+  through the whole process** from cloning the repository to opening a pull
+  request. Read it before your first submission.
+
+The single most important rule when submitting: **never edit a file that came from
+`main`.** Work only in your own file, and you will never hit a merge conflict.
 
 ## Suggested way to study this
 

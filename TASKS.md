@@ -4,9 +4,21 @@ Practice exercises for the Dart module. The tasks follow the same order as the
 lessons in `bin/dart_application_1.dart`, so if a task defeats you, go back and
 re-read that topic first.
 
+## Two kinds of work
+
+| | Practice sets 1–11 | Challenges C1, C2, C3 … |
+| --- | --- | --- |
+| Where it goes | `exercises/` on your own machine | `bin/`, in a file named after you |
+| Submitted? | No — kept private, Git ignores the folder | **Yes** — on your own branch, via a pull request |
+| How | See below | See **`GITHUB_GUIDE.md`** |
+
+Before submitting your first challenge, read `GITHUB_GUIDE.md` from the top. It
+covers branching, committing, pushing and pull requests, and assumes no previous
+experience with Git.
+
 ## Before you start
 
-Create a folder for your work and put each set of tasks in its own file:
+Create a folder for your practice work and put each set of tasks in its own file:
 
 ```bash
 mkdir exercises
@@ -29,10 +41,9 @@ dart run exercises/set2_variables.dart
 
 ## Rules
 
-1. **Only use what we have covered in class.** No functions of your own, no
-   classes, no `try`/`catch` — those topics are still ahead of us. Everything here
-   can be solved with variables, operators, collections, strings and control
-   structures, all written inside `main()`.
+1. **Only use what we have covered in class.** No classes and no `try`/`catch` —
+   those topics are still ahead of us. From Set 11 onwards you may (and should)
+   write your own functions; before that, keep everything inside `main()`.
 2. **Run `dart analyze` before you say you are finished.** It should print
    *No issues found*. If it does not, read the message: it is telling you about a
    real mistake.
@@ -247,11 +258,101 @@ dart run exercises/set2_variables.dart
    some items with a collection `for`, and include one extra item with a
    collection `if`.
 
+## Set 11 — Functions
+
+Remember: a function cannot be declared inside `main()` as a top-level function.
+Put yours **below** `main()` in your exercise file, or in a file inside `lib/`.
+
+### Basics, return types and `void`
+
+1. Write `int addNumbers(int a, int b)` that returns the sum, then call it three
+   times with different values and print each result.
+2. Write a `void` function `sayHello(String name)` that prints a greeting. Explain
+   in a comment why you cannot write `var x = sayHello("Ada");`.
+3. Write `bool isPositive(int n)` and use it inside an `if`.
+4. Write `List<String> initialsOf(List<String> names)` that returns the first
+   letter of each name.
+5. Write `String? findName(List<String> names, String target)` that returns the
+   name if it is in the list and `null` if it is not. Call it both ways, and use
+   `??` to print `Not found`.
+6. Write `String classify(int n)` that returns `"negative"`, `"zero"` or
+   `"positive"` using three `return` statements and **no** `else`. Explain in a
+   comment why no `else` is needed.
+
+### Parameters
+
+7. Write `String describeCar(String make, [String? colour, int? year])` and call it
+   with one, two, then three arguments.
+8. Write `double total({required double price, required int quantity, double discount = 0})`
+   that returns the amount due. Call it with and without the discount.
+9. Rewrite task 8 using only positional parameters. Then write a comment saying
+   which version you would rather read at the call site, and why.
+10. Write a function with a required positional parameter **and** two named
+    parameters. Try putting a named parameter first and read the error you get.
+
+### Default values and arrow functions
+
+11. Write `String repeatText(String text, [int times = 3])` and call it both ways.
+12. Rewrite these as arrow functions: a function returning a number cubed, a
+    function returning whether a string is empty, and a function returning the
+    larger of two numbers.
+13. Take one of your longer functions and explain in a comment why it **cannot**
+    be written with an arrow.
+
+### Functions as values
+
+14. Store a function in a variable and call it through that variable. Then
+    reassign the variable to a different function and call it again.
+15. Build a `List` of three functions that each transform an `int`. Loop through
+    the list, calling each one on the number 6.
+16. Write `int applyOperation(int a, int b, int Function(int, int) operation)` and
+    call it with an add function, a subtract function, and an anonymous function
+    that multiplies.
+17. Write `Function makeGreeter(String greeting)` that returns a function. Use it
+    to build a `sayHi` and a `sayGoodMorning`, then call both. Explain in a comment
+    what the returned function is remembering.
+
+### Typedefs and recursion
+
+18. Create a `typedef` for a function taking a `String` and returning a `String`.
+    Use it to declare a list of two text-formatting functions, then apply both to
+    the same word.
+19. Write a recursive `int sumTo(int n)` that adds every number from 1 to `n`.
+    Label the base case and the recursive case in comments.
+20. Write a recursive function that prints a countdown from `n` to 1. Then remove
+    the base case, run it, and write down the error you get. Put the base case back.
+
+### The collection methods
+
+Use the list `[45, 78, 62, 90, 55]` for these.
+
+21. Use `forEach` to print every score.
+22. Use `map` to add 5 to every score, and print the result as a `List`.
+23. Use `where` to keep only the scores of 60 and above.
+24. Use `any` to check whether anyone scored 90 or more, and `every` to check
+    whether everyone passed.
+25. Use `firstWhere` to find the first score above 60. Then use it to look for a
+    score above 200, supplying `orElse` so it does not crash.
+26. Use `reduce` to find the total, and again to find the highest score.
+27. Use `fold` to build a single `String` of all the scores separated by commas.
+    Explain in a comment why `reduce` could not do this.
+28. Use `removeWhere` to delete every failing score. Print the list before and
+    after, and say in a comment what `removeWhere` did to the original.
+29. Use `List.generate` to build the first ten multiples of 3.
+30. Sort a list of names by length, shortest first. Then sort it longest first.
+31. Chain `where` and `map` in one line: keep the passing scores and convert them
+    to grade letters.
+
 ---
 
 ## Challenges
 
 These combine several topics. Take your time.
+
+**These are the ones you submit.** Each challenge gets its own branch and its own
+file in `bin/`, named after you — for example `bin/c7_ada_lovelace.dart` on branch
+`challenge-c7-ada-lovelace`. Your file needs its own `main()`. Follow
+`GITHUB_GUIDE.md` step by step.
 
 ### C1 — Report card
 
@@ -323,6 +424,46 @@ Then:
 
 **Bonus:** print the names of the students who are *not* eligible, and make sure an
 exempt student never appears in that list.
+
+### C7 — Rebuild your report card with functions
+
+Go back to your answer for **C1** and rewrite it so that almost no logic is left
+inside `main()`. Write at least these functions:
+
+- `double averageOf(List<int> scores)` — returns the average, and returns 0 for an
+  empty list rather than crashing
+- `String gradeFor(int score)` — returns the grade letter
+- `String formatRow(String subject, int score)` — returns one neatly padded line
+- `List<String> failedSubjects(Map<String, int> results)` — returns the subjects
+  below the pass mark
+
+`main()` should then read as a short list of calls, and nothing else.
+
+**Then make it flexible:** change `failedSubjects` so it takes a second parameter
+of type `bool Function(int)`, deciding what counts as a failure. Call it once with
+a rule for "below 50" and again with a rule for "below 40" — **without editing the
+function itself**. That is the moment higher-order functions justify themselves.
+
+### C8 — Password strength checker
+
+Create `typedef Rule = bool Function(String);` and build a
+`Map<String, Rule>` where each key describes a rule and each value tests it:
+
+- `"at least 8 characters"`
+- `"contains a digit"`
+- `"contains a capital letter"`
+- `"is not blank"`
+
+Then:
+
+- Write `List<String> failedRules(String password, Map<String, Rule> rules)` that
+  returns the descriptions of every rule the password breaks.
+- Ask the user for a password.
+- If nothing failed, print `Strong password`. Otherwise print each failure on its
+  own line, starting with how many rules were broken.
+
+**Bonus:** add a fifth rule without touching `failedRules` at all. If you have to
+modify that function, your design was not quite right — think about why.
 
 ---
 

@@ -3,6 +3,10 @@
 // imported explicitly before you can use it.
 import 'dart:io'; // Gives us stdin, for reading input typed by the user.
 import 'dart:math'; // Gives us sqrt(), max(), min(), pi and other math helpers.
+// This one is OUR OWN library, not a built-in. It lives in lib/functions.dart.
+// The package name comes from pubspec.yaml, which is why it reads
+// package:dart_application_1/... rather than a file path.
+import 'package:dart_application_1/functions.dart';
 
 // This is the main function where the execution of the program starts.
 // The main function is the entry point of a Dart application.
@@ -1248,4 +1252,467 @@ Dart is fast.''';
   // work as a method call rather than as part of a literal.
 
   // =================================================================================================================================================
+
+  // =======FUNCTIONS========================================================================================================
+  // Look at how long this main() has become. Every lesson so far has been piled into
+  // one enormous block, and if you wanted to reuse any part of it you would have to
+  // copy and paste it. That is the problem functions solve.
+  // A FUNCTION is a named block of code that you write once and can then run
+  // whenever you like, as many times as you like, with different values each time.
+  // Functions give you three things:
+  // 1. REUSE     - write the logic once, call it from anywhere.
+  // 2. NAMING    - applyVat(2500) says what it does; the arithmetic inside does not.
+  // 3. STRUCTURE - a program becomes a set of small named jobs instead of one wall of code.
+  // We have been calling functions since the very first lesson: print() is a function,
+  // and so are int.parse(), sqrt() and stdin.readLineSync(). Now we write our own.
+
+  // -------1. BASICS: DECLARATION AND INVOCATION-------------------------------------------------
+  // Every function has the same four parts:
+  //
+  //   int      add      (int a, int b)     { return a + b; }
+  //   ^        ^         ^                   ^
+  //   return   name      parameter list      body
+  //   type
+  //
+  // DECLARING a function creates it. It does not run anything.
+  // INVOKING (or CALLING) it is what actually runs the body: you write its name
+  // followed by brackets, with the values it needs inside them.
+  // A function declared but never called does nothing at all.
+
+  // Where can a function be declared?
+  // NOT inside main() as a normal function - main() is itself a function, and you
+  // cannot nest a top-level declaration inside another one. Functions live either:
+  //   (a) at the TOP LEVEL of a file, outside main() - scroll to the bottom of this
+  //       file to see the ones we declare there;
+  //   (b) in another file that you import - ours are in lib/functions.dart;
+  //   (c) inside another function as a LOCAL function, which we cover in a moment.
+
+  // Calling a function from our own library
+  // add() and greet() are declared in lib/functions.dart and imported at the top of
+  // this file. Once imported, they are used exactly as if we had written them here.
+  print(add(3, 4)); // Output: 7
+  print(add(100, 250)); // Output: 350
+  // Same function, different values, no copying and pasting. That is the whole point.
+  greet("Ada"); // Output: Hello, Ada!
+  greet("Bola"); // Output: Hello, Bola!
+  printSeparator(); // a function can take nothing at all
+
+  // Calling a function declared at the bottom of THIS file
+  // Scroll past the closing brace of main() and you will find two more functions.
+  // They need no import, because they are in the same file.
+  printHeading("Functions"); // Output: Functions, then ========= under it
+  print(averageOf([45, 78, 62])); // Output: 61.666666666666664
+  // Note they are declared BELOW main() but called from inside it. At the top level
+  // the order you write things does not matter - Dart reads the whole file first.
+
+  // Parameters versus arguments
+  // These two words get mixed up constantly, so be precise:
+  // - A PARAMETER is the name in the declaration. In `int add(int a, int b)`,
+  //   a and b are parameters. They are placeholders.
+  // - An ARGUMENT is the actual value you pass in when calling. In `add(3, 4)`,
+  //   3 and 4 are arguments.
+  // Parameters are the empty boxes; arguments are what you put in them.
+
+  // The result of a call is a value
+  // A function that returns something can be used anywhere a value can be used:
+  // stored in a variable, printed, or passed into another function.
+  int sumResult = add(10, 5);
+  print(sumResult); // Output: 15
+  print(add(add(1, 2), add(3, 4))); // the inner calls run first. Output: 10
+
+  // Local functions
+  // A function CAN be declared inside another function. It is then private to that
+  // function - nothing outside can see or call it. Use one when a small job is
+  // needed only right here.
+  int halfOf(int n) {
+    return n ~/ 2;
+  }
+
+  print(halfOf(50)); // Output: 25
+  // halfOf only exists inside main(). Another file could never call it.
+
+  // -------2. void AND RETURN TYPES-------------------------------------------------
+  // The type written before a function's name is its RETURN TYPE: it promises what
+  // kind of value the caller will get back.
+
+  // void means "this function returns nothing"
+  // greet() and printSeparator() above are `void`. They DO something - they print -
+  // but they hand nothing back, so there is nothing to store.
+  // var nothing = greet("Ada"); // Error: greet() does not produce a value.
+
+  // Returning a value
+  // Any other return type means the function must hand back a value of that type,
+  // using the `return` keyword.
+  print(isEven(10)); // returns bool. Output: true
+  print(square(7)); // returns int. Output: 49
+  print(applyVat(1000)); // returns double. Output: 1075.0
+  print(splitWords("Dart is fun")); // returns a List. Output: [Dart, is, fun]
+  print(lengthsOf(["Dart", "Go"])); // returns a Map. Output: {Dart: 4, Go: 2}
+
+  // return exits the function IMMEDIATELY
+  // This is the promise we made back in the Jump Statements section. `return` is a
+  // jump statement: the moment it runs, the function stops and control goes back to
+  // whoever called it. Any code after it never runs.
+  // Look at gradeFor() in lib/functions.dart: it is a stack of ifs with no elses,
+  // because the first `return` that runs ends the function on the spot.
+  print(gradeFor(85)); // Output: A
+  print(gradeFor(64)); // Output: B
+  print(gradeFor(20)); // Output: F
+
+  // Nullable return types
+  // If a function might have no answer, say so with a ? on the return type. The
+  // caller is then forced to deal with the null, which is far safer than pretending.
+  print(firstNameOrNull(["Ada", "Bola"])); // Output: Ada
+  print(firstNameOrNull([])); // Output: null
+  print(firstNameOrNull([]) ?? "Nobody"); // Output: Nobody
+
+  // -------3. PARAMETERS: POSITIONAL, OPTIONAL, NAMED-------------------------------------------------
+  // Dart gives you three kinds of parameter, and you can mix them.
+
+  // Required positional parameters
+  // The plain kind we have used so far. They are matched by POSITION, so the order
+  // you pass them in is the order they are received. Get the order wrong and you get
+  // a wrong answer, or a type error.
+  print(add(10, 3)); // Output: 13
+  // Every required positional parameter must be supplied:
+  // print(add(10)); // Error: 2 positional arguments expected, but 1 found.
+
+  // Optional positional parameters, written in [ ]
+  // These may be left out. If they are, they arrive as null - which is why they must
+  // be a nullable type or have a default value.
+  print(describeStudent("Ada")); // Output: Ada
+  print(describeStudent("Ada", 20)); // Output: Ada, aged 20
+  print(
+    describeStudent("Ada", 20, "Dart"),
+  ); // Output: Ada, aged 20, studying Dart
+  // Because they are positional, you cannot skip one and supply the next. There is
+  // no way to give a course without also giving an age.
+
+  // Named parameters, written in { }
+  // These are matched by NAME instead of position, so the caller writes the name at
+  // the call site. Order no longer matters, and the call documents itself.
+  print(formatName(first: "Faleti", last: "Samuel"));
+  // Output: Faleti Samuel
+  print(
+    formatName(last: "Samuel", first: "Faleti"),
+  ); // order swapped, same result
+  // Output: Faleti Samuel
+  print(formatName(first: "Faleti", middle: "Oluwaseyi", last: "Samuel"));
+  // Output: Faleti Oluwaseyi Samuel
+  // Compare those calls with an imaginary positional version, formatName("Faleti",
+  // null, "Samuel"). The named form is obvious; the positional one is a guess.
+
+  // required, on a named parameter
+  // Named parameters are optional by default. Marking one `required` means the
+  // caller must supply it, while still writing its name.
+  // print(formatName(first: "Faleti")); // Error: the parameter 'last' is required.
+
+  // Mixing positional and named
+  // Positional parameters always come first. Named ones follow in their braces.
+  logMessage("Server started"); // Output: [INFO] Server started
+  logMessage("Disk almost full", level: "WARN");
+  // Output: [WARN] Disk almost full
+  logMessage("Build finished", level: "OK", underline: true);
+
+  // -------4. DEFAULT PARAMETER VALUES-------------------------------------------------
+  // Any optional parameter - positional or named - can be given a default value with
+  // `=`. The default is used whenever the caller leaves that argument out.
+  // A default must be a value known at compile time, exactly like a `const`.
+
+  // A default on an optional positional parameter
+  print(applyVat(1000)); // rate left out, so 0.075 is used. Output: 1075.0
+  print(applyVat(1000, 0.05)); // rate supplied, so 5% is used. Output: 1050.0
+
+  // Defaults on named parameters
+  // buildLabel has three named parameters and all three have defaults, so it can be
+  // called with no arguments at all.
+  print(buildLabel()); // Output: 1 x Item
+  print(buildLabel(text: "Book")); // Output: 1 x Book
+  print(buildLabel(text: "Book", count: 3)); // Output: 3 x Book
+  print(buildLabel(text: "Book", count: 3, shout: true)); // Output: 3 X BOOK
+  // Notice you can override just the one you care about and let the rest default.
+  print(buildLabel(shout: true)); // Output: 1 X ITEM
+  // With positional parameters that would be impossible.
+
+  // -------5. ARROW FUNCTIONS-------------------------------------------------
+  // When a function's body is a SINGLE expression, you can replace the braces and
+  // the `return` keyword with a fat arrow =>.
+  //
+  //   int square(int n) { return n * n; }   // long form
+  //   int square(int n) => n * n;           // arrow form - identical meaning
+  //
+  // The arrow form has an invisible `return` built into it. That is why there is no
+  // semicolon after the expression until the end of the line.
+  print(square(9)); // Output: 81
+  print(twice(21)); // Output: 42
+  print(looksLikeEmail("ada@school.com")); // Output: true
+  print(looksLikeEmail("not-an-email")); // Output: false
+  // Arrow syntax only works for ONE expression. A body with an if statement, a loop,
+  // or several lines needs the full braces.
+  // Local functions can use it too:
+  int cube(int n) => n * n * n;
+  print(cube(3)); // Output: 27
+
+  // -------6. FUNCTIONS AS VALUES, AND ANONYMOUS FUNCTIONS-------------------------------------------------
+  // This is the idea that unlocks everything else: in Dart a function is a VALUE,
+  // just like 5 or "hello". It can be stored in a variable, put in a list, passed
+  // into another function, or returned from one.
+
+  // Storing a function in a variable
+  // Write the function's name WITHOUT brackets to refer to the function itself.
+  // Adding brackets would call it and store the result instead.
+  int Function(int) myOperation = square;
+  print(myOperation(6)); // calling it through the variable. Output: 36
+  myOperation = twice; // the same variable can hold a different function
+  print(myOperation(6)); // Output: 12
+  // The type `int Function(int)` reads as "a function taking an int, returning an
+  // int". That is a type like any other, which is why it can label a variable.
+
+  // Anonymous functions
+  // A function does not need a name. An ANONYMOUS function is written as just a
+  // parameter list and a body, and is usually created at the exact spot it is needed.
+  //   (parameters) { body }        or        (parameters) => expression
+  int Function(int) addTen = (int n) {
+    return n + 10;
+  };
+  print(addTen(5)); // Output: 15
+  // Anonymous functions take the arrow form too, and that is how you will usually
+  // see them. Reassigning the same variable proves the two forms are identical:
+  addTen = (int n) => n + 10;
+  print(addTen(5)); // Output: 15
+  // Anonymous functions are also called LAMBDAS. You met one already without knowing
+  // it: the `() => 999` we passed to putIfAbsent back in the Collections topic.
+
+  // Functions in a collection
+  // Because functions are values, a List can hold them.
+  List<int Function(int)> operations = [square, twice, cube];
+  for (int Function(int) operation in operations) {
+    print(operation(5)); // Output: 25, then 10, then 125
+  }
+
+  // Closures
+  // An anonymous function REMEMBERS the variables that were in scope where it was
+  // created, even after that scope has finished. A function bundled with the
+  // variables it remembers is called a CLOSURE.
+  int callCount = 0;
+  void recordCall() {
+    callCount++; // this reaches out and changes main()'s own variable
+  }
+
+  recordCall();
+  recordCall();
+  recordCall();
+  print(callCount); // Output: 3
+  // multiplierOf() in lib/functions.dart is the clearer example: it BUILDS and
+  // returns a function that has remembered its factor.
+  int Function(int) triple = multiplierOf(3);
+  int Function(int) tenTimes = multiplierOf(10);
+  print(triple(7)); // Output: 21
+  print(tenTimes(7)); // Output: 70
+  // Two functions from the same factory, each holding on to its own factor.
+
+  // -------7. HIGHER-ORDER FUNCTIONS-------------------------------------------------
+  // A HIGHER-ORDER FUNCTION is simply a function that takes a function as a
+  // parameter, returns a function, or both. Nothing new is happening - it is the
+  // "functions are values" rule being used.
+
+  // Taking a function as a parameter
+  print(applyTwice(5, square)); // square(square(5)) = 625
+  print(applyTwice(5, twice)); // twice(twice(5))   = 20
+  // The same applyTwice does completely different work depending on what you hand it.
+  // You can pass an anonymous function directly, which is the common style:
+  print(applyTwice(5, (int n) => n + 1)); // Output: 7
+
+  // Returning a function
+  // multiplierOf() above is the example: you call it and get a function back.
+  print(
+    multiplierOf(4)(5),
+  ); // build the times-4 function, then call it. Output: 20
+
+  // Passing a test into a function
+  // keepWhere() in our library takes a list and a function that decides what to keep.
+  List<String> namesToFilter = ["Ada", "Bola", "Chidi", "Ayo"];
+  print(keepWhere(namesToFilter, (String n) => n.startsWith("A")));
+  // Output: [Ada, Ayo]
+  print(keepWhere(namesToFilter, (String n) => n.length > 3));
+  // Output: [Bola, Chidi]
+  // Read keepWhere in lib/functions.dart. It is an ordinary for loop with an if.
+  // Once you have seen that, the built-in `where` method holds no mystery.
+
+  // -------8. FUNCTION TYPEDEFS-------------------------------------------------
+  // Writing `int Function(int)` over and over is noisy. A TYPEDEF gives a function
+  // type a short, meaningful name:
+  //
+  //   typedef IntTransformer = int Function(int);
+  //
+  // From then on IntTransformer means exactly the same as int Function(int), but it
+  // says WHY the function exists rather than just its shape.
+  IntTransformer myTransformer = square;
+  print(myTransformer(8)); // Output: 64
+  print(transformAll([1, 2, 3, 4], square)); // Output: [1, 4, 9, 16]
+  print(transformAll([1, 2, 3, 4], twice)); // Output: [2, 4, 6, 8]
+  print(transformAll([1, 2, 3, 4], (int n) => n - 1)); // Output: [0, 1, 2, 3]
+  // A typedef becomes really useful when the type appears in several places, such
+  // as a LIST of functions. Here each item is a rule a password must satisfy:
+  List<Validator> passwordRules = [
+    (String s) => s.trim().isNotEmpty, // rule 1: must not be blank
+    (String s) => s.length >= 6, // rule 2: must be long enough
+  ];
+  print(passesAll("secret123", passwordRules)); // Output: true
+  print(passesAll("abc", passwordRules)); // Output: false
+  // Without the typedef, that list would have to be declared as
+  // List<bool Function(String)>, which is a mouthful. Adding a third rule is now
+  // just one more line - passesAll() does not change at all.
+
+  // -------9. RECURSION-------------------------------------------------
+  // A function is allowed to call ITSELF. That is called RECURSION, and it suits
+  // problems that contain a smaller copy of themselves.
+  // Every recursive function needs two parts:
+  //   BASE CASE      - the condition that stops it. Without one it never ends.
+  //   RECURSIVE CASE - the call to itself, with a value closer to the base case.
+  print(factorial(5)); // 5*4*3*2*1. Output: 120
+  print(factorial(0)); // the base case on its own. Output: 1
+  countdown(3); // Output: 3, then 2, then 1
+  // Trace factorial(3) by hand:
+  //   factorial(3) -> 3 * factorial(2)
+  //   factorial(2) -> 2 * factorial(1)
+  //   factorial(1) -> 1            <-- base case, so it stops and unwinds
+  //   giving 3 * 2 * 1 = 6
+  // Forget the base case and the program crashes with a StackOverflowError.
+
+  // -------10. SCOPE-------------------------------------------------
+  // SCOPE is the region of code where a name is visible.
+  // - A variable declared inside a function exists only inside that function.
+  // - A variable declared inside an if or a loop exists only inside those braces.
+  // - Something declared at the top level of a file is visible to the whole file,
+  //   and to other files if they import it.
+  // This is why add() and greet() work here: they are top level in a file we imported.
+  // And it is why halfOf() cannot be used anywhere but main().
+  int outerValue = 100;
+  void showOuter() {
+    // A function can SEE variables from the scope that encloses it.
+    print(outerValue); // Output: 100
+  }
+
+  showOuter();
+  // But the reverse is not true - main() cannot see inside showOuter().
+  // Functions should generally take what they need as parameters instead of reaching
+  // out to variables around them. It makes them reusable and easy to reason about.
+
+  // -------11. THE COLLECTION METHODS WE PROMISED-------------------------------------------------
+  // Back in the Collections topic we listed a set of methods and said they had to
+  // wait until functions were covered. Here they are. Every one of them is a
+  // higher-order method: you hand it a function, and it does the looping for you.
+  List<int> scores = [45, 78, 62, 90, 55];
+
+  // forEach - run a function once for each item. Returns nothing.
+  scores.forEach(print); // Output: 45, 78, 62, 90, 55
+  // Note we passed `print` itself, with no brackets. Handing over an existing
+  // function like that is called a TEAR-OFF, and it is where forEach earns its keep.
+  // If instead you write out a function literal - scores.forEach((s) => ...) - then
+  // `dart analyze` will tell you to use an ordinary for-in loop, because the loop is
+  // clearer and can use break and continue. Try it and read the warning.
+
+  // map - transform every item into something else, producing a new collection.
+  // It returns a lazy Iterable, so finish with .toList() to get a real List.
+  print(scores.map((int s) => s + 5).toList()); // Output: [50, 83, 67, 95, 60]
+  print(scores.map((int s) => gradeFor(s)).toList());
+  // Output: [D, A, B, A, C]
+  // This is the method form of the collection `for` we met earlier.
+
+  // where - keep only the items that pass a test.
+  print(scores.where((int s) => s >= 60).toList()); // Output: [78, 62, 90]
+  // And this is the method form of the collection `if`.
+
+  // any and every - ask a yes/no question about the whole collection.
+  print(scores.any((int s) => s >= 90)); // is at least one 90+? Output: true
+  print(scores.every((int s) => s >= 50)); // are they ALL 50+? Output: false
+
+  // firstWhere - find the first item matching a test.
+  print(scores.firstWhere((int s) => s > 60)); // Output: 78
+  // If nothing matches it throws an error, so supply orElse to stay safe:
+  print(scores.firstWhere((int s) => s > 200, orElse: () => -1)); // Output: -1
+
+  // reduce - boil the whole collection down to a single value by combining pairs.
+  print(scores.reduce((int a, int b) => a + b)); // total. Output: 330
+  print(scores.reduce((int a, int b) => a > b ? a : b)); // highest. Output: 90
+
+  // fold - like reduce, but you supply the starting value, so the result can be a
+  // DIFFERENT type from the items. The type in angle brackets says which.
+  print(scores.fold<int>(0, (int total, int s) => total + s)); // Output: 330
+  print(
+    scores.fold<String>("", (String acc, int s) => "$acc$s "),
+  ); // Output: 45 78 62 90 55
+  // reduce cannot do that second one: it always returns the item type, so it could
+  // never turn a list of ints into a String.
+
+  // removeWhere - delete every item matching a test. This CHANGES the list.
+  List<int> passMarks = [45, 78, 62, 90, 55];
+  passMarks.removeWhere((int s) => s < 50);
+  print(passMarks); // Output: [78, 62, 90, 55]
+
+  // List.generate - build a list from an index, using a function.
+  print(
+    List.generate(5, (int index) => index * index),
+  ); // Output: [0, 1, 4, 9, 16]
+  print(List.generate(3, (int index) => "Row ${index + 1}"));
+  // Output: [Row 1, Row 2, Row 3]
+
+  // sort with a comparator - decide the order yourself.
+  // The function receives two items and returns a negative number to put the first
+  // one earlier, a positive number to put it later, and 0 to treat them as equal.
+  List<int> toSort = [45, 78, 62, 90, 55];
+  toSort.sort(
+    (int first, int second) => second.compareTo(first),
+  ); // largest first
+  print(toSort); // Output: [90, 78, 62, 55, 45]
+  List<String> sortByLength = ["Chidi", "Ada", "Bolanle"];
+  sortByLength.sort((String a, String b) => a.length.compareTo(b.length));
+  print(sortByLength); // Output: [Ada, Chidi, Bolanle]
+
+  // putIfAbsent, revisited
+  // Now the `() => 999` we glossed over makes sense: it is an anonymous function.
+  // Map takes a FUNCTION rather than a value so it only has to work out the value
+  // when the key is actually missing.
+  Map<String, int> inventory = {"Pen": 10};
+  inventory.putIfAbsent(
+    "Pen",
+    () => 999,
+  ); // key exists, so the function never runs
+  inventory.putIfAbsent("Book", () => 25); // key missing, so the function runs
+  print(inventory); // Output: {Pen: 10, Book: 25}
+
+  // Chaining them together
+  // Because most of these return a collection, you can join them into a pipeline.
+  // Read it left to right: take the scores, keep the passes, convert to grades.
+  print(scores.where((int s) => s >= 50).map(gradeFor).toList());
+  // Output: [A, B, A, C]
+  // Compare that with the plain .map() a few lines above, which gave
+  // [D, A, B, A, C]. The 45 was filtered out by where() before map() ever saw it,
+  // so its D never appears. Order in a chain matters.
+  // Also notice we passed `gradeFor` as a tear-off, with no brackets and no
+  // (s) => gradeFor(s) wrapper around it.
+
+  // =================================================================================================================================================
+}
+
+// ===========================================================================
+// TOP-LEVEL FUNCTIONS
+// ===========================================================================
+// Everything below sits OUTSIDE main(). These are top-level functions: they belong
+// to the file rather than to any other function, and they are visible to every
+// function in this file.
+// Note that main() above calls them even though they are written below it. Order of
+// declaration does not matter at the top level - Dart reads the whole file first.
+
+/// Returns the average of [values], or 0 when the list is empty.
+double averageOf(List<int> values) {
+  if (values.isEmpty) return 0;
+  return values.reduce((int a, int b) => a + b) / values.length;
+}
+
+/// Prints a heading with a line of equals signs under it.
+void printHeading(String heading) {
+  print(heading);
+  print("=" * heading.length);
 }

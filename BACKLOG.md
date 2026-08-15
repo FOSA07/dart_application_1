@@ -15,29 +15,31 @@ housekeeping. This is teacher-side planning. Student exercises live in `TASKS.md
 
 ## 1. Course content
 
-### Next up: Functions
+### Functions — DONE 2026-08-14
 
-- [ ] Declaring a function: name, parameters, return type, `return`
-- [ ] `void` versus a real return type
-- [ ] Positional parameters
-- [ ] Optional positional parameters `[ ]` and default values
-- [ ] Named parameters `{ }`, `required`, and defaults
-- [ ] Arrow syntax `=>` for one-line functions
-- [ ] Anonymous functions, and passing a function as an argument
-- [ ] Scope: local versus top-level, and why `main()` has grown so large
-- [ ] **Debt owed from Collections** — the Collections section ends with a written
-      promise to cover these once functions are taught. They were held back
-      deliberately because each one takes a function as its argument:
-  - [ ] `forEach`
-  - [ ] `map`
-  - [ ] `where`
-  - [ ] `any` / `every`
-  - [ ] `firstWhere`
-  - [ ] `reduce` / `fold`
-  - [ ] `removeWhere`
-  - [ ] `List.generate`
-  - [ ] `sort` with a custom comparator
-  - [ ] Revisit `putIfAbsent`, whose `() => 999` argument we flagged as a preview
+- [x] Declaring a function: name, parameters, return type, `return`
+- [x] `void` versus a real return type, plus nullable return types
+- [x] Parameters versus arguments as terminology
+- [x] Positional parameters
+- [x] Optional positional parameters `[ ]` and default values
+- [x] Named parameters `{ }`, `required`, and defaults
+- [x] Arrow syntax `=>` for one-line functions
+- [x] Functions as values; anonymous functions; closures
+- [x] Higher-order functions — taking one, returning one
+- [x] Function typedefs
+- [x] Recursion, with base case and recursive case
+- [x] Scope: local functions, top-level functions, enclosing scope
+- [x] **Debt owed from Collections** — fully repaid:
+  - [x] `forEach` (taught as a tear-off, with a note on why the literal form is linted)
+  - [x] `map`
+  - [x] `where`
+  - [x] `any` / `every`
+  - [x] `firstWhere`, including `orElse`
+  - [x] `reduce` / `fold`, and why `fold` can change type but `reduce` cannot
+  - [x] `removeWhere`
+  - [x] `List.generate`
+  - [x] `sort` with a custom comparator
+  - [x] `putIfAbsent` revisited, now that `() => 999` can be explained
 
 ### Then, in teaching order
 
@@ -91,8 +93,7 @@ housekeeping. This is teacher-side planning. Student exercises live in `TASKS.md
 - [ ] Write exercises for each topic covered so far
 - [ ] Put exercises in `test/` so students can run `dart test` and get an objective
       pass or fail on their work
-- [ ] Start using `lib/` when we reach Functions — `README.md` already tells
-      students that is what `lib/` and `test/` are for
+- [x] Start using `lib/` — done via `lib/functions.dart`
 - [ ] Replace the stock `calculate()` in `lib/dart_application_1.dart`
 
 ---
@@ -132,3 +133,7 @@ housekeeping. This is teacher-side planning. Student exercises live in `TASKS.md
       Structures, so collection-if and collection-for come only once `if` and `for`
       have been taught
 - [x] 2026-08-14 — Added exercise Set 10, spread tasks in Set 5, and challenge C6
+- [x] 2026-08-14 — Wrote the Functions topic in full (11 sub-blocks) and created
+      `lib/functions.dart`, which doubles as the custom-library example the
+      Libraries topic promised. Repaid the Collections debt in full.
+- [x] 2026-08-14 — Added exercise Set 11 (31 tasks) plus challenges C7 and C8
